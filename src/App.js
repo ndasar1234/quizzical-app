@@ -1,25 +1,53 @@
-import logo from './logo.svg';
-import './App.css';
+import React from "react";
+import Welcome from "./components/Welcome"
+import Quiz from "./components/Quiz"
 
-function App() {
+export default function App() {
+
+  const [startQuiz, setStartQuiz] = React.useState(false)
+
+  function beginQuiz() {
+    setStartQuiz(prev => !prev)
+  }
+
+
+  // state used by <Quiz /> and <Welcome />
+  const [formData, setFormData] = React.useState({
+    numQuestions: "",  // number
+    category: "",  // drop down box
+    difficulty: "",  // drop down box
+    questionType: ""  // drop down box
+  })
+
+  // used to manipulate state above in <Welcome />
+  function handleChange(event) {
+    const { name, value } = event.target
+    setFormData(prevFormData => {
+      return {
+        ...prevFormData,
+        [name]: value
+      }
+    })
+  }
+
+
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
-}
+    <main>
+      <div className="content">
+        {
+          startQuiz ?
+            <div>
+              <Quiz formData={formData} startQuiz={beginQuiz} />
+            </div>
+            :
+            <Welcome startQuiz={beginQuiz} formData={formData} handleChange={handleChange} />
+        }
+      </div>
+      <div className="left-blob"></div>
+      <div className="right-blob"></div>
+    </main>
 
-export default App;
+
+  )
+}
